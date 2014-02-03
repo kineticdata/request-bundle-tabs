@@ -1,0 +1,194 @@
+<%!
+    /**
+     * Custom submission model to satisfy the requirements of the submission console
+     */
+    public static class SubmissionConsole {
+        public static final String FORM_NAME = "KS_SRV_CustomerSurvey";
+        public static final String FIELD_ID = "179";
+        public static final String FIELD_TEMPLATE_ID = "700002203";
+        public static final String FIELD_REQUEST_ID = "536870913";
+        public static final String FIELD_TEMPLATE_NAME = "700001000";
+        public static final String FIELD_ORIGINATING_FORM = "600000300";
+        public static final String FIELD_ORIGINATING_ID = "600000310";
+        public static final String FIELD_ORIGINATING_REQUEST_ID = "700088607";
+        public static final String FIELD_SUBMIT_TYPE = "700088475";
+        public static final String FIELD_SURVEY_COMPLETED_DATE = "700001285";
+        public static final String FIELD_SURVEY_SENT_DATE = "700001282";
+        public static final String FIELD_MODIFIED_DATE = "6";
+        // Represents the state of the Request.  It's the display status meant to be communicated to the client
+        public static final String FIELD_VALIDATION_STATUS = "700002400";
+        public static final String FIELD_CUSTOMER_SURVEY_STATUS = "7";
+        public static final String FIELD_TYPE = "600000600";
+        // Typically contains the cancellation notes
+        public static final String FIELD_NOTES_FOR_CUSTOMER = "600003021";
+        // Requested For First Name
+        public static final String FIELD_ATTRIBUTE_5 = "300299800";
+        // Requested For Last Name
+        public static final String FIELD_ATTRIBUTE_6 = "700001806";
+        public static final String FIELD_NOTES = "600003021";
+        // Represents the status of the Request including task workflow (This is
+        // a Enumeration field that allows values of 'Open' or 'Closed' and is
+        // typically set by the KineticRequest_Submission_Close handler).
+        public static final String FIELD_REQUEST_STATUS = "700089541";
+        public static final String FIELD_CREATE_DATE = "3";
+        public static final String FIELD_REQUEST_CLOSED_DATE = "700088489";
+        // Ticket Number, primary key of ticketing application, INC, CHG numbers
+        public static final String FIELD_ATTRIBUTE_52 = "700001852";
+        // Ticketing Application, will contain Remedy form name or any ticketing application name
+        public static final String FIELD_ATTRIBUTE_53 = "700001853";
+        public static final String FIELD_ATTRIBUTE_54 = "700001854";
+        // Service Item Cost charged to the requester/requesting organization is stored in attribute 62 since we have no defined field
+        public static final String FIELD_ATTRIBUTE_62 = "700001862";
+        // SLA Status is stored in attribute 64 since we have no defined field
+        public static final String FIELD_ATTRIBUTE_64 = "700001864";
+
+        public static final String[] FIELD_IDS = new String[] {
+            FIELD_ID, FIELD_TEMPLATE_ID, FIELD_REQUEST_ID, FIELD_TEMPLATE_NAME, FIELD_ORIGINATING_FORM, FIELD_ORIGINATING_ID, FIELD_ORIGINATING_REQUEST_ID, FIELD_SUBMIT_TYPE, FIELD_SURVEY_COMPLETED_DATE, FIELD_SURVEY_SENT_DATE, FIELD_MODIFIED_DATE, FIELD_VALIDATION_STATUS, FIELD_CUSTOMER_SURVEY_STATUS, FIELD_TYPE, FIELD_ATTRIBUTE_5, FIELD_ATTRIBUTE_6, FIELD_NOTES, FIELD_REQUEST_STATUS, FIELD_CREATE_DATE, FIELD_REQUEST_CLOSED_DATE, FIELD_ATTRIBUTE_52, FIELD_ATTRIBUTE_53, FIELD_ATTRIBUTE_54, FIELD_NOTES_FOR_CUSTOMER, FIELD_ATTRIBUTE_62, FIELD_ATTRIBUTE_64
+        };
+
+        private Template template = null;
+        private SimpleEntry entry = null;
+        private Task[] tasks;
+        private Map<String,List<Task>> taskTreeExecutions;
+
+        public static SubmissionConsole[] find(HelperContext context, Catalog catalog, String qualification, String[] sortFields, Integer chunkSize, Integer recordOffset, Integer sortOrder) {
+            SubmissionConsole[] results = new SubmissionConsole[0];
+
+            SimpleEntry[] entries = ArsBase.find(context, FORM_NAME, qualification, FIELD_IDS, sortFields, chunkSize, recordOffset, sortOrder);
+            if (entries != null && entries.length > 0) {
+                results = new SubmissionConsole[entries.length];
+                for(int i=0;i<results.length;i++) {
+                    results[i] = new SubmissionConsole(entries[i], context, catalog);
+                }
+            }
+
+            return results;
+        }
+
+        public static SubmissionConsole findByInstanceId(HelperContext context, Catalog catalog, String id) {
+            SubmissionConsole result = null;
+
+            SimpleEntry entry = ArsBase.findByInstanceId(context, FORM_NAME, id, FIELD_IDS);
+            if (entry != null) {
+                result = new SubmissionConsole(entry, context, catalog);
+            }
+
+            return result;
+        }
+
+        public static SubmissionConsole findByRequestId(HelperContext context, Catalog catalog, String id) {
+            SubmissionConsole result = null;
+
+            SimpleEntry entry = ArsBase.findByRequestId(context, FORM_NAME, id, FIELD_IDS);
+            if (entry != null) {
+                result = new SubmissionConsole(entry, context, catalog);
+            }
+
+            return result;
+        }
+
+        public SubmissionConsole(SimpleEntry entry, HelperContext context, Catalog catalog) {
+            this.entry = entry;
+            // Get template
+            this.template = catalog.getTemplateById(this.entry.getEntryFieldValue(FIELD_TEMPLATE_ID));
+        }
+
+        public Task[] getTasks(HelperContext context) {
+            if (tasks == null) {
+                // Retrieve the associated tasks
+                tasks = Task.findBySource(context, "Kinetic Request", getId());
+            }
+            return tasks;
+        }
+
+        public Map<String,List<Task>> getTaskTreeExecutions(HelperContext context) {
+            if (taskTreeExecutions == null) {
+                taskTreeExecutions = new LinkedHashMap();
+                Task[] tasks = getTasks(context);
+                for (Task task : tasks) {
+                    List<Task> treeExecutions = taskTreeExecutions.get(task.getTreeName());
+                    if (treeExecutions == null) {
+                        treeExecutions = new ArrayList();
+                        taskTreeExecutions.put(task.getTreeName(), treeExecutions);
+                    }
+                    treeExecutions.add(task);
+                }
+            }
+            return taskTreeExecutions;
+        }
+
+        public Template getTemplate() {return this.template;}
+        public String getId() {return entry.getEntryFieldValue(FIELD_ID);}
+        public String getTemplateId() {return entry.getEntryFieldValue(FIELD_TEMPLATE_ID);}
+        public String getRequestId() {return entry.getEntryFieldValue(FIELD_REQUEST_ID);}
+        public String getTemplateName() {return entry.getEntryFieldValue(FIELD_TEMPLATE_NAME);}
+        public String getOriginatingForm() {return entry.getEntryFieldValue(FIELD_ORIGINATING_FORM);}
+        public String getOriginatingId() {return entry.getEntryFieldValue(FIELD_ORIGINATING_ID);}
+        public String getOriginatingRequestId() {return entry.getEntryFieldValue(FIELD_ORIGINATING_REQUEST_ID);}
+        public String getCompletedDate() {return entry.getEntryFieldValue(FIELD_SURVEY_COMPLETED_DATE);}
+        public String getCustomerSurveyStatus() {return entry.getEntryFieldValue(FIELD_CUSTOMER_SURVEY_STATUS);}
+        public String getSentDate() {return entry.getEntryFieldValue(FIELD_SURVEY_SENT_DATE);}
+        public String getModifiedDate() {return entry.getEntryFieldValue(FIELD_MODIFIED_DATE);}
+        public String getValiationStatus() {return entry.getEntryFieldValue(FIELD_VALIDATION_STATUS);}
+        public String getType() {return entry.getEntryFieldValue(FIELD_TYPE);}
+        public String getSubmitType() {return entry.getEntryFieldValue(FIELD_SUBMIT_TYPE);}
+        public String getFirstName() {return entry.getEntryFieldValue(FIELD_ATTRIBUTE_5);}
+        public String getLastName() {return entry.getEntryFieldValue(FIELD_ATTRIBUTE_6);}
+        public String getNotes() {return entry.getEntryFieldValue(FIELD_NOTES);}
+        public String getRequestStatus() {return entry.getEntryFieldValue(FIELD_REQUEST_STATUS);}
+        public String getCreateDate() {return entry.getEntryFieldValue(FIELD_CREATE_DATE);}
+        public String getRequestClosedDate() {return entry.getEntryFieldValue(FIELD_REQUEST_CLOSED_DATE);}
+        public String getTicketingApplication() {return entry.getEntryFieldValue(FIELD_ATTRIBUTE_53);}
+        public String getTicketingId() {return entry.getEntryFieldValue(FIELD_ATTRIBUTE_52);}
+        public String getTicketingStatus() {return entry.getEntryFieldValue(FIELD_ATTRIBUTE_54);}
+        public String getNotesForCustomer() {return entry.getEntryFieldValue(FIELD_NOTES_FOR_CUSTOMER);}
+        public String getSLAStatus() {return entry.getEntryFieldValue(FIELD_ATTRIBUTE_64);}
+        public String getCost() {return entry.getEntryFieldValue(FIELD_ATTRIBUTE_62);}
+        public String getServiceItemImage() {return (this.template != null && this.template.hasTemplateAttribute("ServiceItemImage")) ? this.template.getTemplateAttributeValue("ServiceItemImage") : null; }
+
+        private static Map<String, String> JSON_FIELDMAP = new HashMap<String, String>() {{
+            put("Closed", FIELD_REQUEST_CLOSED_DATE);
+            put("Display Status", FIELD_VALIDATION_STATUS);
+            put("Customer Survey Status", FIELD_CUSTOMER_SURVEY_STATUS);
+            put("Id", FIELD_ID);
+            put("Modified", FIELD_MODIFIED_DATE);
+            put("Originating Id", FIELD_ORIGINATING_ID);
+            put("Originating Name", FIELD_ORIGINATING_FORM);
+            put("Originating Request Id", FIELD_ORIGINATING_REQUEST_ID);
+            put("Request Id", FIELD_REQUEST_ID);
+            put("Request Status", FIELD_REQUEST_STATUS);
+            put("Requested For", FIELD_ATTRIBUTE_5);
+            put("Sent", FIELD_SURVEY_SENT_DATE);
+            put("Service Item Type", FIELD_TYPE);
+            put("Submit Type", FIELD_SUBMIT_TYPE);
+            put("Submitted", FIELD_SURVEY_COMPLETED_DATE);
+            put("Template Name", FIELD_TEMPLATE_NAME);
+            put("Ticketing Application", FIELD_ATTRIBUTE_53);
+            put("Ticketing Id", FIELD_ATTRIBUTE_52);
+        }};
+
+        public String toJson() {
+            // Build linked hash map for JSON conversion
+            Map<String, String> result = new LinkedHashMap<String, String>();
+            for (Map.Entry<String, String> element : JSON_FIELDMAP.entrySet()) {
+                String fieldAlias = element.getKey();
+                String fieldId = element.getValue();
+                String fieldValue = null;
+                if(fieldAlias.equals("Requested For")) {
+                    // Append first name and last name for requested for
+                    if(!this.getFirstName().equals("") && !this.getLastName().equals("")) {
+                        fieldValue = this.getFirstName() + " " + this.getLastName();
+                    }
+                } else {
+                    if(!entry.getEntryFieldValue(fieldId).equals("")) { fieldValue = entry.getEntryFieldValue(fieldId); }
+                }
+                result.put(fieldAlias, fieldValue);
+            }
+            // Service Item Image
+            result.put("Service Item Image", ((this.getServiceItemImage() != null) ? this.getServiceItemImage() : null));
+            return JSONValue.toJSONString(result);
+        }
+
+        public static String getSortFieldId(String fieldName) { return JSON_FIELDMAP.get(fieldName); }
+    }
+%>

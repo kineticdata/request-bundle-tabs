@@ -1,0 +1,49 @@
+<%@page language="java" import="javax.servlet.http.Cookie"%>
+<%!
+    public static class CookieHelper {
+        /**
+         * Returns the value of the cookie with the specified name, or null if a cookie with the
+         * specified name does not exist.
+         *
+         * @param request
+         * @param cookieName
+         * @return  The cookie value String, or null if the cookie does not exist.
+         */
+        public static String getCookieValue(HttpServletRequest request, String cookieName) {
+            // Initialize the result
+            String result = null;
+            // Retrieve the cookies (this will return null rather than an empty array)
+            Cookie[] cookies = request.getCookies();
+            // If there are any cookies
+            if (cookies != null) {
+                // Iterate over each of the cookies
+                for (Cookie cookie : cookies) {
+                    // If the name of the cookie matches the desired cookie, set the result and break
+                    if (cookieName.equals(cookie.getName())) {
+                        result = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+            // Return the result
+            return result;
+        }
+
+        /**
+         * Sets a cookie with the name and value specified as parameters.
+         * 
+         * Automatically removes CR/LF from the cookie value to prevent against HTTP response splitting.
+         *   (See https://www.owasp.org/index.php/HTTP_Response_Splitting)
+         *
+         * @param response
+         * @param cookieName
+         * @param cookieValue
+         */
+        public static void setCookieValue(HttpServletResponse response, String cookieName, String cookieValue) {
+            // Add the cookie to the response
+            Cookie cookie = new Cookie(cookieName, cookieValue.replaceAll("\\\\r\\\\n", ""));
+            cookie.setMaxAge(Integer.MAX_VALUE);
+            response.addCookie(cookie);
+        }
+    }
+%>

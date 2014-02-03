@@ -1,0 +1,28 @@
+<%!
+    public static class Incident extends BridgeBase {
+        private static final Class CLASS = Incident.class;
+        private static final String MODEL_NAME = "Incident";
+        public Incident() {}
+
+        public static Incident findById(HelperContext context, String templateId, String id) {
+            // Define the bridge qualification that this method will use.
+            String qualification = "By Id";
+            // Build the map of parameters for the qualification above.
+            Map<String, String> parameters = new java.util.HashMap<String, String>();
+            parameters.put("Id", id);
+            // Make the bridge call.
+            return BridgeBase.retrieve(context, templateId, MODEL_NAME, qualification, parameters, CLASS);
+        }
+        
+        /**
+         * Incident extends Bridge base so get is avaliable
+         */
+        public String getId() { return get("Id"); }
+        public String getSummary() { return get("Summary"); }
+        public String getNotes() { return get("Notes"); }
+        public String getStatusReason() { return get("Status Reason"); }
+        public String getStatus() { return get("Status"); }
+        public String getPriority() { return get("Priority"); }
+        public String getToken() { return get("Token"); }
+    }
+%>  

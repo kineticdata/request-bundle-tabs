@@ -1,0 +1,14 @@
+<%--
+    Catalog config
+    NOTE: This file is required.
+--%>
+<%
+    // Configuration of available description attributes for search and catgory display pages.
+    ArrayList<String> attributeDescriptionNames = new ArrayList();
+    attributeDescriptionNames.add("Charge");
+    attributeDescriptionNames.add("Approvals");
+    attributeDescriptionNames.add("Who Can Request");  
+
+    // Used in catalog.jsp for top Requests. This is used to filter top Requests by their template type
+    String[] templateTypeFilterTopSubmissions = new String[] {"Approval", "Utility", "Request Description", "Resolution Inquiry", "Portal"}; 
+%>

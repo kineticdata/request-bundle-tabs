@@ -1,0 +1,269 @@
+<%@page import="com.kd.arsHelpers.*"%>
+<%@page import="java.lang.reflect.*"%>
+<%@page import="java.util.*"%>
+<%!
+    /**
+     *  SubmissionStatisticsHelper
+     *
+     *  This is used for gathering a list of the top requests based on client submissions
+     *  For use: this file has to be included inside the initialization file under the package's framework\includes
+     */
+    public static class SubmissionStatisticsHelper {
+        // Simple helper class used to reference the KS_SRV_CustomerSurvey form fields by name
+        public static class KS_SRV_CustomerSurvey {
+            public static Integer CATALOG_NAME = 600000500;
+            public static Integer SUBMISSION_STATUS = 7;
+            public static Integer SUBMITTER = 2;
+            public static Integer TEMPLATE_NAME = 700001000;
+            public static Integer TEMPLATE_STATUS = 536870914;
+            public static Integer TEMPLATE_TYPE = 600000600;
+        }
+        
+        /**
+         *  Example use:
+         *  String[] templateTypeFilter = new String[] {"Approval", "Utility", "Request Description", "Template", "Resolution Inquiry", "Portal"};
+         *  List<String> mostRequestedTemplates = SubmissionStatisticsHelper.getMostCommonTemplateNames(systemContext, new String[] {customerRequest.getCatalogName()}, templateTypeFilter, 5);
+         *  for(String templateName : mostRequestedTemplates) {
+         *      Template popularRequest = catalog.getTemplateByName(templateName);
+         *      popularRequest.getName();
+         *  }
+         *  
+         *  @param HelperContext object
+         *  @param catalogNames String[], provide an array of strings. Each string is the name of the catalog to include.
+         *  @param excludedTypes String[], provide an array of strings with what service item "Types" that should be excluded.  These are the types from Request.
+         *  @param maxResults Integer, how many results should return
+         *  @return List<String>, returns a list of string template names that meet the criteria based on the parameters above
+         */
+        public static List<String> getMostCommonTemplateNames(HelperContext context, String[] catalogNames, String[] excludedTypes, Integer maxResults) {
+            return getMostCommonTemplateNames(context, catalogNames, excludedTypes, null, maxResults);
+        }
+        
+        public static List<String> getMostCommonTemplateNames(HelperContext context, String[] catalogNames, String[] excludedTypes, String submitter, Integer maxResults) {
+            // Validate the parameters
+            if (context == null) {
+                throw new IllegalArgumentException("The 'user' parameter can't be null.");
+            }
+            if (catalogNames == null || catalogNames.length == 0) {
+                throw new IllegalArgumentException("The 'catalogNames' parameter can't be empty.");
+            }
+            
+            // Define the results
+            List<String> results = new ArrayList<String>();
+
+            // Attempt to count the items
+            try {
+                // Build up the qualification
+                StringBuilder qual = new StringBuilder();
+                // Limit to the specified catalog names
+                qual.append("(");
+                for (int i=0;i<catalogNames.length;i++) {
+                    if (i != 0) { qual.append(" OR "); }
+                    qual.append("'").append(KS_SRV_CustomerSurvey.CATALOG_NAME).append("' = \"").append(catalogNames[i]).append("\"");
+                }
+                qual.append(")");
+                // Omit the excluded template types
+                if (excludedTypes != null && excludedTypes.length > 0) {
+                    qual.append(" AND (");
+                    for (int i=0;i<excludedTypes.length;i++) {
+                        if (i != 0) { qual.append(" AND "); }
+                        qual.append("'").append(KS_SRV_CustomerSurvey.TEMPLATE_TYPE).append("'")
+                            .append(" != \"").append(excludedTypes[i]).append("\"");
+                    }
+                    qual.append(")");
+                }
+                // Limit to completed submissions
+                qual.append(" AND ('").append(KS_SRV_CustomerSurvey.SUBMISSION_STATUS).append("' = \"Completed\")");
+                // Limit to active templates
+                qual.append(" AND (")
+                    .append("'").append(KS_SRV_CustomerSurvey.TEMPLATE_STATUS).append("' = \"New\"")
+                    .append(" OR ")
+                    .append("'").append(KS_SRV_CustomerSurvey.TEMPLATE_STATUS).append("' = \"Active\"")
+                    .append(")");
+                // Restrict to submitter if one was specified
+                if (submitter != null) {
+                    qual.append(" AND (")
+                        .append("'").append(KS_SRV_CustomerSurvey.SUBMITTER).append("' = \"").append(submitter).append("\"")
+                        .append(")");
+                }
+                
+                /**
+                 * The following code leverages Java reflection so that it is compatible with both 
+                 * the ARS 7.0 API (shipped with Kinetic Request v5.1 and before) and the ARS 8.0 
+                 * API (shipped with Kinetic Request v5.1.1 and after).  The "un-reflectionified"
+                 * code is shown in the comment below.
+                 *      // Build the qualification
+                 *      QualifierInfo qualifier = user.parseQualification("KS_SRV_CustomerSurvey", qual.toString());
+                 *      // Build the group by fields
+                 *      int[] groupBy = new int[] {KS_SRV_CustomerSurvey.TEMPLATE_NAME};
+                 *      
+                 *      // Get the statistics
+                 *      List<StatisticsResultInfo> countInfos = user.getEntryStatistics(
+                 *      "KS_SRV_CustomerSurvey", qualifier, null, Constants.AR_STAT_OP_COUNT, groupBy);
+                 *      // Sort the statistics
+                 *      Collections.sort(countInfos, new Comparator<StatisticsResultInfo>() {
+                 *      @Override public int compare(StatisticsResultInfo a, StatisticsResultInfo b) {
+                 *      Integer aCount = a.getResult().getIntValue();
+                 *      Integer bCount = b.getResult().getIntValue();
+                 *              return bCount.compareTo(aCount);
+                 *          }
+                 *      });
+                 *      
+                 *      // Build the map of results
+                 *      for (StatisticsResultInfo info : countInfos) {
+                 *          // Retrieve the template name from the first group result
+                 *          String templateName = info.getGroupByValues().get(0).toString();
+                 *          // Add the template name to count mapping to the results
+                 *          results.add(templateName);
+                 *      }
+                 */
+                
+                // If the ARServerUser corresponds to an ARS 8.0 API class
+                if ("com.bmc.arsys.api.ARServerUser".equals(context.getContext().getClass().getName())) {
+                    // Build reflective references to the Ars70 classes
+                    HashMap<String,Class> arsClasses = new HashMap<String,Class>();
+                    arsClasses.put("ARServerUser",         Class.forName("com.bmc.arsys.api.ARServerUser"));
+                    arsClasses.put("Operand",              Class.forName("com.bmc.arsys.api.ArithmeticOrRelationalOperand"));
+                    arsClasses.put("QualifierInfo",        Class.forName("com.bmc.arsys.api.QualifierInfo"));
+                    arsClasses.put("StatisticsResultInfo", Class.forName("com.bmc.arsys.api.StatisticsResultInfo"));
+                    arsClasses.put("Value",                Class.forName("com.bmc.arsys.api.Value"));
+                    
+                    // Obtain a references to the necessary methods
+                    final Method ARServerUser_parseQualification = arsClasses.get("ARServerUser").getMethod("parseQualification",
+                        String.class, String.class);
+                    final Method ARServerUser_getEntryStatistics = arsClasses.get("ARServerUser").getDeclaredMethod("getEntryStatistics", 
+                        String.class, arsClasses.get("QualifierInfo"), arsClasses.get("Operand"), int.class, int[].class);
+                    final Method StatisticResultInfo_getGroupByValues = arsClasses.get("StatisticsResultInfo").getMethod("getGroupByValues");
+                    final Method StatisticResultInfo_getResult = arsClasses.get("StatisticsResultInfo").getMethod("getResult");
+                    final Method Value_getValue = arsClasses.get("Value").getMethod("getValue");
+                    // Build the qualification
+                    Object qualifierInfo = ARServerUser_parseQualification.invoke(context.getContext(), "KS_SRV_CustomerSurvey", qual.toString());
+                    // Build the group by fields
+                    int[] groupBy = new int[] {KS_SRV_CustomerSurvey.TEMPLATE_NAME};
+
+                    // Get the statistics (List<StatisticsResultInfo>)
+                    List<Object> countInfos = (List<Object>)ARServerUser_getEntryStatistics.invoke(
+                        context.getContext(), "KS_SRV_CustomerSurvey", qualifierInfo, null, 1, groupBy); // Constants.AR_STAT_OP_COUNT == 1
+                    // Sort the statistics
+                    Collections.sort(countInfos, new Comparator() {
+                        public int compare(Object o1, Object o2) {
+                            int result = 0;
+                            try {
+                                Object result1 = StatisticResultInfo_getResult.invoke(o1); // Value
+                                Object result2 = StatisticResultInfo_getResult.invoke(o2); // Value
+                                Double value1 = (Double)Value_getValue.invoke(result1);
+                                Double value2 = (Double)Value_getValue.invoke(result2);
+                                result = value2.compareTo(value1);
+                            } catch (Exception e) {
+                                throw new RuntimeException("Unexpected exception: "+e.getMessage(), e);
+                            }
+                            return result;
+                        }
+                    });
+
+                    // For each of the countInfos
+                    for (Object countInfo : countInfos) {
+                        // Pull the template name value from the group by values
+                        List<Object> groupByValues = (List<Object>)StatisticResultInfo_getGroupByValues.invoke(countInfo);
+                        // Add the template name value to the results
+                        results.add((String)Value_getValue.invoke(groupByValues.get(0)));
+                    }
+                }
+                // If the ARServerUser corresponds to the ARS 7.0 API class
+                else {
+                    // Build reflective references to the Ars70 classes
+                    HashMap<String,Class> arsClasses = new HashMap<String,Class>();
+                    arsClasses.put("ARServerUser",         Class.forName("com.remedy.arsys.api.ARServerUser"));
+                    arsClasses.put("Field",                Class.forName("com.remedy.arsys.api.Field"));
+                    arsClasses.put("Field[]",              Class.forName("[Lcom.remedy.arsys.api.Field;"));
+                    arsClasses.put("FieldCriteria",        Class.forName("com.remedy.arsys.api.FieldCriteria"));
+                    arsClasses.put("FieldFactory",         Class.forName("com.remedy.arsys.api.FieldFactory"));
+                    arsClasses.put("FieldListCriteria",    Class.forName("com.remedy.arsys.api.FieldListCriteria"));
+                    arsClasses.put("InternalID",           Class.forName("com.remedy.arsys.api.InternalID"));
+                    arsClasses.put("InternalID[]",         Class.forName("[Lcom.remedy.arsys.api.InternalID;"));
+                    arsClasses.put("NameID",               Class.forName("com.remedy.arsys.api.NameID"));
+                    arsClasses.put("Operand",              Class.forName("com.remedy.arsys.api.ArithmeticOrRelationalOperand"));
+                    arsClasses.put("QualifierInfo",        Class.forName("com.remedy.arsys.api.QualifierInfo"));
+                    arsClasses.put("StatisticsResultInfo", Class.forName("com.remedy.arsys.api.StatisticsResultInfo"));
+                    arsClasses.put("SchemaKey",            Class.forName("com.remedy.arsys.api.SchemaKey"));
+                    arsClasses.put("Util",                 Class.forName("com.remedy.arsys.api.Util"));
+                    arsClasses.put("Timestamp",            Class.forName("com.remedy.arsys.api.Timestamp"));
+                    arsClasses.put("Value",                Class.forName("com.remedy.arsys.api.Value"));
+
+                    // Obtain references to the necessary constructors
+                    Constructor FieldListCriteria = arsClasses.get("FieldListCriteria").
+                        getConstructor(arsClasses.get("NameID"), arsClasses.get("Timestamp"), int.class);
+                    Constructor InternalID = arsClasses.get("InternalID").getConstructor(Long.TYPE);
+                    Constructor NameID = arsClasses.get("NameID").getConstructor(String.class);
+                    Constructor SchemaKey = arsClasses.get("SchemaKey").getConstructor(String.class);
+                    Constructor Timestamp = arsClasses.get("Timestamp").getConstructor(long.class);
+                    // Obtain a references to the necessary methods
+                    final Method StatisticResultInfo_getGroupByValues = arsClasses.get("StatisticsResultInfo").getMethod("getGroupByValues");
+                    final Method StatisticResultInfo_getResult = arsClasses.get("StatisticsResultInfo").getMethod("getResult");
+                    final Method Util_getEntryStatistics = arsClasses.get("Util").getDeclaredMethod("ARGetEntryStatistics", 
+                        arsClasses.get("ARServerUser"), arsClasses.get("SchemaKey"), arsClasses.get("QualifierInfo"),
+                        arsClasses.get("Operand"), int.class, arsClasses.get("InternalID[]"));
+                    final Method Util_getQualifier = arsClasses.get("Util").getDeclaredMethod("ARGetQualifier", 
+                        arsClasses.get("ARServerUser"), String.class, arsClasses.get("Field[]"), arsClasses.get("Field[]"), int.class);
+                    final Method Value_getValue = arsClasses.get("Value").getMethod("getValue");
+
+                    // Build the Schema Key
+                    Object schemaKey = SchemaKey.newInstance("KS_SRV_CustomerSurvey");
+                    // Retrieve the array of data fields on the form (needed to parse the qualification)
+                    Object schemaNameId = NameID.newInstance("KS_SRV_CustomerSurvey");
+                    Object timestamp = Timestamp.newInstance(0);
+                    Object fieldListCriteria = FieldListCriteria.newInstance(schemaNameId, timestamp, 1); // FieldType.AR_DATA_FIELD == 1
+                    Object fieldCriteria = arsClasses.get("FieldCriteria").newInstance();
+                    int changeDiary = arsClasses.get("FieldCriteria").getDeclaredField("CHANGE_DIARY").getInt(arsClasses.get("FieldCriteria"));
+                    int helpText = arsClasses.get("FieldCriteria").getDeclaredField("HELP_TEXT").getInt(arsClasses.get("FieldCriteria"));
+                    Method setPropertiesToRetrieve = arsClasses.get("FieldCriteria").getMethod("setPropertiesToRetrieve", int.class);
+                    setPropertiesToRetrieve.invoke(fieldCriteria, ~changeDiary & ~helpText);
+                    Method findObjects = arsClasses.get("FieldFactory").getDeclaredMethod("findObjects", 
+                        arsClasses.get("ARServerUser"), arsClasses.get("FieldListCriteria"), arsClasses.get("FieldCriteria"));
+                    Object fields = findObjects.invoke(arsClasses.get("FieldFactory"), context.getContext(), fieldListCriteria, fieldCriteria);
+                    // Build the qualification
+                    Object qualifierInfo = Util_getQualifier.invoke(arsClasses.get("Util"), context.getContext(), qual.toString(), fields, null, 0);
+
+                    // Build the array of InternalID objects for the getEntryStatistics call
+                    Object groupIds = Array.newInstance(arsClasses.get("InternalID"), 1);
+                    Array.set(groupIds, 0, InternalID.newInstance(KS_SRV_CustomerSurvey.TEMPLATE_NAME));
+                    
+                    // Execute the getEntryStatistics call
+                    Object[] countInfos = (Object[])Util_getEntryStatistics.invoke(arsClasses.get("Util"),
+                            context.getContext(), schemaKey, qualifierInfo, null, 1, groupIds); // Constants.AR_STAT_OP_COUNT == 1
+                    // Sort the countInfos array so that the highest counts are first
+                    Arrays.sort(countInfos, new Comparator() {
+                        public int compare(Object o1, Object o2) {
+                            int result = 0;
+                            try {
+                                Object result1 = StatisticResultInfo_getResult.invoke(o1); // Value
+                                Object result2 = StatisticResultInfo_getResult.invoke(o2); // Value
+                                Double value1 = (Double)Value_getValue.invoke(result1);
+                                Double value2 = (Double)Value_getValue.invoke(result2);
+                                result = value2.compareTo(value1);
+                            } catch (Exception e) {
+                                throw new RuntimeException("Unexpected exception: "+e.getMessage(), e);
+                            }
+                            return result;
+                        }
+                    });
+                    
+                    // For each of the countInfos
+                    for (Object countInfo : countInfos) {
+                        // Pull the template name value from the group by values
+                        Object groupByValues = StatisticResultInfo_getGroupByValues.invoke(countInfo);
+                        Object value = Array.get(groupByValues, 0);
+                        // Add the template name value to the results
+                        results.add((String)Value_getValue.invoke(value));
+                    }
+                }
+            }
+            // If there was a problem executing the request
+            catch (Exception e) {
+                throw new RuntimeException("There was a problem calculating the most commonly requested templates.", e);
+            }
+            
+            // Return the results (up to the maximum requested)
+            return maxResults > results.size() ? results : results.subList(0, maxResults);
+        }
+    }
+%>

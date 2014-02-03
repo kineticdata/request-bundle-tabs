@@ -1,0 +1,132 @@
+<!-- Start Incident Worklogs -->
+<% if (incident != null) {%>
+    <ul class="worklogs unstyled">
+        <header class="clearfix">
+            <h4>Activity Log(s)</h4>
+        </header>
+        <%
+        BridgeList<IncidentWorkLog> incidentWorkLogs = IncidentWorkLog.findByIncidentId(context, templateId, incidentId);
+        if (incidentWorkLogs.size() > 0) {
+        %>
+            <% for (IncidentWorkLog incidentWorkLog : incidentWorkLogs) {%>
+                <li class="worklog <%= zebraCycle.cycle()%>" data-id="<%= incidentWorkLog.getId()%>">
+                    <% if (!incidentWorkLog.getSubmitDate().equals("")) {%>
+                        <div class="wrap">
+                            <div class="label">Date &amp; Time:</div>
+                            <div class="value"><%= incidentWorkLog.getSubmitDate()%></div>
+                        </div>
+                    <% }%>
+                    <% if (!incidentWorkLog.getSubmitter().equals("")) {%>
+                        <div class="wrap">
+                            <div class="label">Submitter:</div>
+                            <div class="value"><%= incidentWorkLog.getSubmitter()%></div>
+                        </div>
+                    <% }%>
+                    <% if (!incidentWorkLog.getSummary().equals("")) {%>
+                        <div class="wrap">
+                            <div class="label">Summary:</div>
+                            <div class="value"><%= incidentWorkLog.getSummary()%></div>
+                        </div>
+                    <% }%>
+                    <% if (!incidentWorkLog.getNotes().equals("")) {%>
+                        <div class="wrap">
+                            <div class="label">Notes:</div>
+                            <div class="value"><%= incidentWorkLog.getNotes()%></div>
+                        </div>
+                    <% }%>
+                    <div class="label">Attachment(s)</div>
+                    <br />
+                    <% if (!incidentWorkLog.getAttachment1().equals("")) {%>
+                        <a href="<%=bundle.applicationPath() + incidentWorkLog.getAttachment1Url(bundle)%>">
+                            <%=incidentWorkLog.getAttachment1()%>
+                        </a>
+                        <br />
+                    <% }%>
+                    <% if (!incidentWorkLog.getAttachment2().equals("")) {%>
+                        <a href="<%=bundle.applicationPath() + incidentWorkLog.getAttachment2Url(bundle)%>">
+                            <%=incidentWorkLog.getAttachment2()%>
+                        </a>
+                        <br />
+                    <% }%>                                            
+                    <% if (!incidentWorkLog.getAttachment3().equals("")) {%>
+                        <a href="<%=bundle.applicationPath() + incidentWorkLog.getAttachment3Url(bundle)%>">
+                            <%=incidentWorkLog.getAttachment3()%>
+                        </a>
+                        <br />
+                    <% }%>  
+                </li>
+            <% } %>
+        <% } else {%>
+            <p>
+                <strong>No Activity Logs Exist.</strong>
+            </p>
+        <% } %>
+    </ul>
+<% } %>
+<!-- End Incident Worklogs -->
+<!-- Start Change Worklogs -->
+<% if (change != null) {%>
+    <ul class="worklogs unstyled">
+        <header class="clearfix">
+            <h4>Activity Log(s)</h4>
+        </header>
+        <%
+        BridgeList<ChangeWorkLog> changeWorkLogs = ChangeWorkLog.findByChangeId(context, templateId, changeId);
+        if (changeWorkLogs.size() > 0) {
+        %>
+            <% for (ChangeWorkLog changeWorkLog : changeWorkLogs) {%>
+                <li class="worklog <%= zebraCycle.cycle()%>" data-id="<%= changeWorkLog.getId()%>">
+                    <% if (!changeWorkLog.getSubmitDate().equals("")) {%>
+                        <div class="wrap">
+                            <div class="label">Date &amp; Time:</div>
+                            <div class="value"><%= changeWorkLog.getSubmitDate()%></div>
+                        </div>
+                    <% }%>
+                    <% if (!changeWorkLog.getSubmitter().equals("")) {%>
+                        <div class="wrap">
+                            <div class="label">Submitter:</div>
+                            <div class="value"><%= changeWorkLog.getSubmitter()%></div>
+                        </div>
+                    <% }%>
+                    <% if (!changeWorkLog.getSummary().equals("")) {%>
+                        <div class="wrap">
+                            <div class="label">Summary:</div>
+                            <div class="value"><%= changeWorkLog.getSummary()%></div>
+                        </div>
+                    <% }%>
+                    <% if (!changeWorkLog.getNotes().equals("")) {%>
+                        <div class="wrap">
+                            <div class="label">Notes:</div>
+                            <div class="value"><%= changeWorkLog.getNotes()%></div>
+                        </div>
+                    <% }%>
+                    <div class="label">Attachment(s)</div>
+                    <br />
+                    <% if (!changeWorkLog.getAttachment1().equals("")) {%>
+                        <a href="<%=bundle.applicationPath() + changeWorkLog.getAttachment1Url(bundle)%>">
+                            <%=changeWorkLog.getAttachment1()%>
+                        </a>
+                        <br />
+                    <% }%>
+                    <% if (!changeWorkLog.getAttachment2().equals("")) {%>
+                        <a href="<%=bundle.applicationPath() + changeWorkLog.getAttachment2Url(bundle)%>">
+                            <%=changeWorkLog.getAttachment2()%>
+                        </a>
+                        <br />
+                    <% }%>                                            
+                    <% if (!changeWorkLog.getAttachment3().equals("")) {%>
+                        <a href="<%=bundle.applicationPath() + changeWorkLog.getAttachment3Url(bundle)%>">
+                            <%=changeWorkLog.getAttachment3()%>
+                        </a>
+                        <br />
+                    <% }%>  
+                </li>
+            <% } %>
+        <% } else {%>
+            <p>
+                <strong>No Activity Logs Exist.</strong>
+            </p>
+        <% } %>
+    </ul>
+<% }%>
+<!-- End Change Worklogs -->

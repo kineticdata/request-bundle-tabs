@@ -1,0 +1,45 @@
+<%!
+    public static class IncidentWorkLog extends BridgeBase {
+        private static final Class CLASS = IncidentWorkLog.class;
+        private static final String MODEL_NAME = "Incident Work Info";
+        public IncidentWorkLog() {}
+
+        public static BridgeList<IncidentWorkLog> findByIncidentId(HelperContext context, String templateId, String incidentId) {
+            String qualification = "By Incident Id";
+            Map<String, String> parameters = new java.util.HashMap<String, String>();
+            parameters.put("Incident Id", incidentId);
+            Map<String, String> metadata = new java.util.HashMap<String, String>();
+            /**
+             * This metadata sets a sort on id
+             * Sorting is required on at least one attribute other than description with over 255 characters or things will break
+             * The bridge syntax has to be delimited as a string otherwise it will be interpreted as java code
+             */
+            metadata.put("order", "<"+"%=attribute[\"SubmitDate\"]%"+">:ASC");
+            return BridgeBase.search(context, templateId, MODEL_NAME, qualification, parameters, metadata, CLASS);
+        }
+
+        public String getAttachment1Url(Bundle bundle) {
+            return "DownloadAttachment/" + get("MetaFormName") + "/" + get("MetaAttachment1FieldId") + "/" + getId();
+        }
+
+        public String getAttachment2Url(Bundle bundle) {
+            return "DownloadAttachment/" + get("MetaFormName") + "/" + get("MetaAttachment2FieldId") + "/" + getId();
+        }
+
+        public String getAttachment3Url(Bundle bundle) {
+            return "DownloadAttachment/" + get("MetaFormName") + "/" + get("MetaAttachment3FieldId") + "/" + getId();
+        }
+        
+        /**
+         * IncidentWorkLog extends Bridge base so get is avaliable
+         */
+        public String getId() { return get("Id"); }
+        public String getSubmitter() { return get("Submitter"); }
+        public String getSubmitDate() { return get("SubmitDate"); }
+        public String getSummary() { return get("Summary"); }
+        public String getNotes() { return get("Notes"); }
+        public String getAttachment1() { return get("Attachment1"); }
+        public String getAttachment2() { return get("Attachment2"); }
+        public String getAttachment3() { return get("Attachment3"); }
+    }
+%>  

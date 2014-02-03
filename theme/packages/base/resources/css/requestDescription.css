@@ -1,0 +1,33 @@
+@charset "utf-8";
+a.create-request { margin-bottom: 10px; }
+.templateButtonLayer {
+    display: none !important;
+}
+
+div[label="Left Section"] {
+    float: left;
+    width: 700px;
+    padding: 0 20px 0 0;
+    margin: 0 20px 0 0;
+    border-right-style: solid; 
+    border-right-width: 1px; 
+    border-right-color: #e3e3e3; 
+}
+
+div[label="Right Section"] {
+    float: left;
+    width: 200px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    div[label="Left Section"] {
+        float: none;
+        width: auto;
+        border: none;
+    }
+    div[label="Right Section"] {
+        float: none;
+        width: auto;
+    }
+}

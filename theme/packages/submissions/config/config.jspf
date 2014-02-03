@@ -1,0 +1,47 @@
+<%--
+    Submission config
+    NOTE: This file is required.
+--%>
+<%
+    bundle.setProperty("submissionActivityUrl", bundle.applicationPath() + "DisplayPage?name=" + bundle.getProperty("slug") + "_SubmissionDetails");
+
+    // Auto created requests type
+    bundle.setProperty("autoCreatedRequestType", "Auto Created Requests");
+
+    /* These qualfications are designed for custiomer survey, not customer survey base! */
+    java.util.Map<String,String> submissionGroups = new java.util.LinkedHashMap();
+    if (context != null) {
+        submissionGroups.put("Draft Request", "'ApplicationName'=\"Kinetic Request\" AND 'Category'=\""+bundle.getProperty("catalogName")+"\" AND 'CustomerSurveyStatus'=\"In Progress\" AND 'Request_Status'=\"Open\" AND 'Submit Type'=$NULL$ AND 'Submitter'=\""+context.getUserName()+"\" AND ('Type' != \"Utility\" OR 'Type' = $NULL$)");
+        submissionGroups.put("Open Request", "'ApplicationName'=\"Kinetic Request\" AND 'Category'=\""+bundle.getProperty("catalogName")+"\" AND 'CustomerSurveyStatus'=\"Completed\" AND 'Request_Status'=\"Open\" AND 'Submitter'=\""+context.getUserName()+"\" AND 'Submit Type'=$NULL$ AND ('Type' != \"Utility\" OR 'Type' = $NULL$)");
+        submissionGroups.put("Closed Request", "'ApplicationName'=\"Kinetic Request\" AND 'Category'=\""+bundle.getProperty("catalogName")+"\" AND 'Request_Status'=\"Closed\" AND 'Submit Type'=$NULL$ AND 'Submitter'=\""+context.getUserName()+"\" AND ('Type' != \"Utility\" OR 'Type' = $NULL$)");
+        submissionGroups.put("Pending Approval",   "'ApplicationName'=\"Kinetic Request\" AND 'Category'=\""+bundle.getProperty("catalogName")+"\" AND 'CustomerSurveyStatus'=\"Sent\" AND 'Request_Status'=\"Open\" AND 'Submit Type'=\"Approval\" AND 'Submitter'=\""+context.getUserName()+"\"");
+        submissionGroups.put("Completed Approval", "'ApplicationName'=\"Kinetic Request\" AND 'Category'=\""+bundle.getProperty("catalogName")+"\" AND 'ApplicationName'=\"Kinetic Request\" AND 'CustomerSurveyStatus'=\"Completed\" AND 'Request_Status'=\"Closed\" AND 'Submit Type'=\"Approval\" AND 'Submitter'=\""+context.getUserName()+"\"");
+    }
+
+    // Create submission list filter based on My Requests or My Approvals (Used for UI)
+    List<String> requestsFilter = Arrays.asList("Draft Request", "Open Request", "Closed Request");
+    List<String> approvalsFilter = Arrays.asList("Pending Approval", "Completed Approval");
+
+    // Counts is needed to control UI visibility for submissions
+    Integer totalRequests = 0;
+    Integer totalApprovals = 0;
+    if (context != null) {
+        for (String groupName : submissionGroups.keySet()) {
+            Integer count = ArsBase.count(context, "KS_SRV_CustomerSurvey", submissionGroups.get(groupName));
+            // JavaScript visibility
+            bundle.setProperty(groupName + " Count", Integer.toString(count));
+            // Total count of Requests
+            if(groupName.equals("Open Request")) {
+                totalRequests = totalRequests + count;
+            }
+            // Total Count of Approvals
+            if(groupName.equals("Pending Approval")) {
+                totalApprovals = totalApprovals + count;
+            }
+        }
+    }
+
+    // Used for gathering ticket information in submission activity page
+    bundle.setProperty("incidentHandler", "bmc_itsm7_incident_create_v2");
+    bundle.setProperty("changeHandler", "bmc_itsm7_change_create_v2");
+%>

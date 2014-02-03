@@ -1,0 +1,82 @@
+@charset "utf-8";
+
+div.warningContainer h3 {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+div.warningContainer {
+    display: inline-block;
+}
+
+/* Temp requester info */
+a.edit-contact { margin: 0; }
+a.edit-contact:hover { margin: 0; }
+
+/* Dialog */
+#contactSetup { overflow-y: hidden; overflow-x: hidden; }
+#close { float: right; margin: 10px 0px 0px 0px; }
+div.ui-dialog-titlebar { display: none; }
+div.ui-dialog .ui-dialog-content { padding: 5px 5px 5px 5px; }
+div.ui-tabs .ui-tabs-panel { padding: 0; }
+div#lookup { padding: 10px 10px 0 10px; }
+
+/* Tabs Custom */
+#tabs .ui-widget-content { border: none; }
+
+/* User Lookup Infield label */
+#lookupForm form p { position: relative; }
+#lookupForm label { margin: 5px 0px 0px 10px; position: absolute; }
+
+/* Advanced search */
+table#advanced-search-results {
+    font-size: 11px;
+    text-align: justify;
+    width: 100%;
+    border: 1px solid gray;
+    margin-top: 10px;
+}
+table#advanced-search-results tr td, table#advanced-search-results tr th {
+    padding: 5px;
+}
+table#advanced-search-results tbody tr { cursor: pointer; }
+ul#advanced-search-pagination-links li { float: left; margin: 0 5px 0 5px; }
+ul#advanced-search-pagination-links li a.active { color: gray; }
+div#advanced-search-selected { margin-top: 10px; }
+ul.ui-autocomplete { z-index: 1100; padding: 0; }
+ul.ui-autocomplete li a span { font-size: 11px; color: gray; }
+ul.ui-autocomplete li a.ui-state-hover,
+ul.ui-autocomplete li a.ui-widget-content .ui-state-hover,
+ul.ui-autocomplete li a.ui-widget-header .ui-state-hover,
+ul.ui-autocomplete li a.ui-state-focus,
+ul.ui-autocomplete li a.ui-widget-content .ui-state-focus,
+ul.ui-autocomplete li a.ui-widget-header .ui-state-focus,
+ul.ui-autocomplete li a.ui-state-hover,
+ul.ui-autocomplete li a.ui-widget-content .ui-state-hover span,
+ul.ui-autocomplete li a.ui-widget-header .ui-state-hover span,
+ul.ui-autocomplete li a.ui-state-focus span,
+ul.ui-autocomplete li a.ui-widget-content .ui-state-focus span,
+ul.ui-autocomplete li a.ui-widget-header .ui-state-focus span  {
+    background: #3D6699;
+    color: white;
+}
+.ui-autocomplete-loading { 
+    background:url(../../../../common/resources/images/spinner.gif) no-repeat right center;
+    background-size: 22px 22px;
+}
+div.advanced-search #loader {
+    float: none;
+    width: auto;
+    text-align: center;
+    margin: 40px 0 0 0;
+}
+a.advanced-search { margin: 10px 0 0 0; }
+
+/* Contact Details */
+div.answer { margin: 15px 2px 0px 0px; }
+div#response-message { margin: 10px 10px 10px 10px; }
+div.confirmation { padding: 10px 10px 0px 10px; text-align: center; }
+div.user-information { padding: 10px 0px 10px 10px; }
+div.user-information div[data-id="Login ID"] { display: none; }
+div.user-information div[data-id="First Name"] { float: left; margin-right: 5px; }
+div.user-information div[data-id="Middle Name"] { display: none; }

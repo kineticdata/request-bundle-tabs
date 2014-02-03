@@ -1,0 +1,96 @@
+<!-- Footer -->
+<footer class="footer">
+    <span style="display:none">&nbsp;</span>
+    <div class="container">
+        <div class="col-md-12 block-1">
+            <i class="fa fa-rss-square left"></i>
+            <div class="left">
+                <div class="subscribe">
+                    Subscribe to RSS
+                </div>
+                <div class="news">
+                    Latest news and press releases
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="block-2">
+            <div class="col-sm-3">
+                <h4>
+                    Contact us
+                </h4>
+                <div>
+                <p><%= bundle.getProperty("companyName")%></p>
+                <p>Tel. (555) 555-5555</p>
+                <p>Fax. (555) 555-5555</p>
+                <p><a href="<%= bundle.getProperty("feedbackUrl")%>">All contact information</a></p>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <h4>
+                    Follow us
+                </h4>
+                <ul class="link-list unstyled">
+                    <li class="">
+                        <a target="_blank" href="#" title="">Twitter</a>
+                    </li>
+            
+                    <li class="">
+                        <a target="_blank" href="#" title="" rel="external">LinkedIn</a>
+                    </li>
+            
+                    <li class="">
+                        <a target="_blank" href="#" title="" rel="external">YouTube</a>
+                    </li>
+            
+                    <li class="">
+                        <a target="_blank" href="#" title="" rel="external">Flickr</a>
+                    </li>
+            
+                    <li class="">
+                        <a target="_blank" href="#" title="" rel="external">Slideshare</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-3">
+                <h4>
+                    About
+                </h4>
+                <div>
+                    <p>
+                        <span>Jelly sweet roll gingerbread halvah souffle. Halvah cheesecake toffee sugar plum croissant chocolate cake. Oat cake candy topping jelly marzipan oat cake. Jujubes cookie dessert brownie caramels. Caramels topping bear claw jelly-o tiramisu.
+                            <br><br>
+                        </span>
+                    </p>
+                    <p>
+                        <a href="<%= bundle.getProperty("aboutUrl")%>"><span>More about <%= bundle.getProperty("companyName")%></span></a>
+                    </p>
+                    <p>&nbsp;</p>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="block-3">
+            <div class="col-sm-3">
+                <p>
+                    <a target="" href="#" title="" class="">About this website</a>
+                </p>
+            </div>
+            <div class="col-sm-3">
+                <p>            
+                    <a target="" href="#" title="" class="">Privacy Policy</a>
+                </p>
+            </div>
+            <div class="col-sm-3">
+                <p> 
+                    <a target="" href="#" title="" class="">About cookies</a>
+                </p>
+            </div>
+            <div class="col-sm-3">
+                <p> 
+                    <a target="" href="#" title="" class="">Sitemap</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

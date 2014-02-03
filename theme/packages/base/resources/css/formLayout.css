@@ -1,0 +1,83 @@
+/* Common override */
+div.custom-form textarea, 
+div.custom-form input[type="text"], 
+div.custom-form input[type="password"], 
+div.custom-form input[type="datetime"], 
+div.custom-form input[type="datetime-local"], 
+div.custom-form input[type="date"], 
+div.custom-form input[type="month"], 
+div.custom-form input[type="time"], 
+div.custom-form input[type="week"], 
+div.custom-form input[type="number"], 
+div.custom-form input[type="email"], 
+div.custom-form input[type="url"], 
+div.custom-form input[type="search"], 
+div.custom-form input[type="tel"], 
+div.custom-form input[type="color"] {
+	display: inline-block;
+	padding: 4px 6px;
+	margin-bottom: 9px;
+	font-size: 12px;
+	line-height: 12px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	height: auto;
+}
+div.custom-form select {
+	padding-top: 2px;
+}
+/* Template Section */
+form#pageQuestionsForm div.custom-form div.templateSection,
+div#reviewContent div.custom-form div.templateSection {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    overflow: hidden !important;
+}
+/* Question layer */
+form#pageQuestionsForm div.custom-form div.questionLayer,
+div#reviewContent div.custom-form div.questionLayer { 
+    padding: 0 4px 0 4px; 
+}
+form#pageQuestionsForm div.custom-form div.dynamicText, 
+form#pageQuestionsForm div.custom-form div.questionLayer,
+div#reviewContent div.custom-form div.dynamicText,
+div#reviewContent div.custom-form div.questionLayer { position: inherit; }
+form#pageQuestionsForm div.custom-form div.questionAnswer,
+div#reviewContent div.custom-form div.questionAnswer { position: inherit; margin-left: auto; }
+/* Label */
+form#pageQuestionsForm div.questionLabel,
+body.loadAllPages_false div#reviewContent div.questionLabel {
+    float: none;
+    width: auto;
+    font-weight: inherit;
+}
+div.custom-form div.section-header {
+	background-color: #CCCCCC;
+	font-weight: bold;
+	color: black;
+	border-top: 1px solid #041A31;
+	border-bottom: 1px solid #041A31; 
+}
+div.custom-form div.float-left {
+	float: left;
+}
+div.custom-form div.dynamicText {
+	padding:2px; 
+}
+div.custom-form div.questionLayer {
+	height: 52px;
+}
+div.custom-form {
+	border: 1px solid black;
+	overflow: hidden; 
+	margin-bottom: 35px !important;
+}
+/* Cancel & Save Draft */
+form#pageQuestionsForm div.custom-form div[label="Bottom of Page"],
+form#pageQuestionsForm div.custom-form div.submitButton,
+form#pageQuestionsForm div.custom-form div.previousButton {
+	background-color: #F3F3F3;
+	margin-top: 10px !important;
+}

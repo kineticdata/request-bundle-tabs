@@ -1,0 +1,8 @@
+<%--
+    Base config
+    NOTE: This file is required.
+--%>
+<%
+    // Bridge attribute configuration, used for lookup
+    bundle.setProperty("bridgeAttributes", "Login ID,First Name,Middle Name,Last Name,Email,Phone,Site");
+%>

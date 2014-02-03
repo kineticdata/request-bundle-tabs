@@ -1,0 +1,36 @@
+<header class="main">
+    <a class="logo" href="<%= bundle.getProperty("catalogUrl")%>">
+        <img alt="<%= bundle.getProperty("companyName") %>" src="<%= bundle.bundlePath()%>common/resources/images/logo.png" />
+    </a>
+    <div class="container">
+        <a class="logo" href="<%= bundle.getProperty("catalogUrl")%>">
+            <img alt="<%= bundle.getProperty("companyName") %>" src="<%= bundle.bundlePath()%>common/resources/images/logo.png" />
+        </a>
+        <button type="button" class="fa fa-bars" data-target="div.navigation-slide">
+        </button>
+        <div class="collapse">
+            <%@include file="contentUser.jspf"%>
+            <ul>
+                <li class="catalog">
+                    <a href="<%= bundle.getProperty("catalogUrl")%>">
+                        <!-- <i class="fa fa-home"></i> -->
+                        Catalog
+                    </a> 
+                </li>
+                <li class="approvals">
+                    <a href="<%= bundle.getProperty("submissionsUrl")%>&type=approvals">
+                        <!--  <i class="fa fa-check"></i> -->
+                        Approvals
+                    </a>
+                </li>
+                <li class="requests">
+                    <a href="<%= bundle.getProperty("submissionsUrl")%>&type=requests">
+                        <!-- <i class="fa fa-exchange"></i> -->
+                        Requests
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<div class="fixed-header-spacer"></div>

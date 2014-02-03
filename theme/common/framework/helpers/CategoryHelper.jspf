@@ -1,0 +1,15 @@
+<%!
+    /**
+     * Category Helper
+     */
+    public static class CategoryHelper {
+        public static List<Category> getCategoryTrail(Catalog catalog, Category category) {
+            List<Category> result = new ArrayList<Category>();
+            while (category != null) {
+                result.add(0, category);
+                category = catalog.getCategoryByName(category.getParentName());
+            }
+            return result;
+        }
+    }
+%>

@@ -1,0 +1,113 @@
+<!-- Start Temp Requester Information -->
+<div id="temp-requester-info">
+    <div class="request-for">
+        <h4>
+            This request is for:
+        </h4>
+        <div class="contact border-left">
+            <span id="request-for-name"></span>&nbsp;<a href="JavaScript:void(0);" data-id="0" class="edit-contact">Change</a>
+            <div id="request-for-email"></div>
+            <div id="request-for-phone"></div>
+            <div id="request-for-site"></div>
+        </div>
+    </div>
+    <div class="approver">
+        <h4>
+            Approver:
+        </h4>
+        <div class="contact border-left">
+            <span id="approver-name"></span>&nbsp;<a href="JavaScript:void(0);" data-id="1" class="edit-contact">Add</a>
+            <div id="approver-email"></div>
+            <div id="approver-phone"></div>
+            <div id="approver-site"></div>
+        </div>
+    </div>
+</div>
+<!-- End Temp Requester Information -->
+<!-- Start Custom Form Edit Contact Information -->
+<div id="contactSetup" class="hidden clearfix">
+    <div id="tabs">
+        <ul>
+            <li>
+                <a href="#request-for-tab">
+                    Requested For
+                </a>
+            </li>
+            <li>
+                <a href="#approver-tab">
+                    Approver
+                </a>
+            </li>
+        </ul>
+        <div id="lookup" class="clearfix">
+            <form id="lookupForm">
+                <a class="advanced-search-link" href="JavaScript:void(0);">(+) Advanced Search</a>
+                <p>
+                    <label class="infield" for="email">
+                        Type an email address to begin
+                    </label>
+                    <input type="text" name="email" id="email" class="input-block-level" autocomplete="off" value="" />
+                </p>
+                <div class="advanced-search hidden">
+                    <p>
+                        <label class="infield" for="first-name">
+                            First Name
+                        </label>
+                        <input type="text" name="firstName" id="first-name" class="input-block-level" autocomplete="off" value="" />
+                    </p>
+                    <p>
+                        <label class="infield" for="last-name">
+                            Last Name
+                        </label>
+                        <input type="text" name="lastName" id="last-name" class="input-block-level" autocomplete="off" value="" />
+                    </p>
+                    <input type="submit" value="Search" class="templateButton" />
+                    <%-- LOADER --%>
+                    <div id="loader" class="hidden">
+                        <img alt="Please Wait." src="<%=bundle.bundlePath()%>common/resources/images/spinner.gif" />
+                        <br />
+                        Loading Results
+                    </div>
+                    <table id="advanced-search-results" class="hidden">
+                    </table>
+                    <nav id="pagination" class="hidden">    
+                    </nav>
+                </div>
+            </form>
+            <div id="autocomplete-selected" class="hidden">            
+                <div class="user-information border-top border-bottom">
+                </div>
+                <div class="confirmation">
+                    Would you like to set this contact?
+                    <br />
+                    <div class="answer">
+                        <a class="save templateButton" href="JavaScript:void(0);">Yes</a>
+                        <a class="cancel templateButton" href="JavaScript:void(0);">No</a>
+                    </div>
+                </div>
+           </div>
+           <div id="advanced-search-selected" class="hidden">            
+                <div class="user-information border-top border-bottom">
+                </div>
+                <div class="confirmation">
+                    Would you like to set this contact?
+                    <br />
+                    <div class="answer">
+                        <a class="save templateButton" href="JavaScript:void(0);">Yes</a>
+                        <a class="cancel templateButton" href="JavaScript:void(0);">No</a>
+                    </div>
+                </div>
+           </div>
+        </div>
+        <div id="request-for-tab" class="hidden">            
+        </div>
+        <div id="approver-tab" class="hidden">
+        </div>
+        <div id="response-message"></div>
+        <div class="clearfix"></div>
+        <a id="close" class="templateButton" href="JavaScript:void(0);">
+            Close
+        </a>
+    </div>
+</div>
+<!-- End Custom Form Edit Contact Information -->

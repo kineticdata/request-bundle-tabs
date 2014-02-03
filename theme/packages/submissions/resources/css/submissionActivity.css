@@ -1,0 +1,73 @@
+@charset "utf-8";
+
+/* Header */
+header.container div.request-status { background-color: #EEEEEE; padding: 10px; }
+header.container div.request-status h3 { color: #E16B1E; margin: 0; float: left; }
+header.container div.request-status a.reopen-request { float: right; }
+header.container a.templateButton { margin: 0 0 10px 0; width: 180px; }
+/* clearfix */
+header.container div.request-status { *zoom: 1; }
+header.container div.request-status:before,
+header.container div.request-status:after { display: table; content: ""; line-height: 0; }
+header.container div.request-status:after { clear: both; }
+*:first-child+html header.container div.request-status { zoom: 1; } /* IE7 */
+header.container div.request-information div.left { float: left; padding: 5px 10px; }
+header.container div.request-information div.left:first-child { width: 300px; }
+header.container div.request-information div.middle { width: 430px; padding-bottom: 20px; }
+header.container div.request-information div.left div.content-wrap div.image { float: left; margin: 10px 20px 0 0; }
+header.container div.request-information div.left div.content-wrap div.originating-name { float: left; margin: 30px 0 0 0; font-size: 13px; }
+header.container div.request-information div.left h3 { margin: 0; }
+header.container div.request-information div.left div.submitted-label,
+header.container div.request-information div.left div.closed-label,
+header.container div.request-information div.left div.request-id-label,
+header.container div.request-information div.left div.requested-for-label { color: black; font-weight: bold; float: left; font-size: 13px; }
+header.container div.request-information div.left div.submitted-value,
+header.container div.request-information div.left div.closed-value,
+header.container div.request-information div.left div.request-id-value,
+header.container div.request-information div.left div.requested-for-value { font-size: 13px; }
+
+/* Clearfix, for floats */
+div.wrap { *zoom: 1; }
+div.wrap:before,
+div.wrap:after { display: table; content: ""; line-height: 0; }
+div.wrap:after { clear: both; }
+*:first-child+html div.wrap { zoom: 1; } /* IE7 */
+
+/* Activity */
+section.container { margin-bottom: 10px; }
+section.container div.submission-activity ul.tasks li.cancelled { background-color: rgb(255, 223, 223); }
+section.container div.submission-activity ul.tasks li.task header { margin: 0 0 10px 0; }
+section.container div.submission-activity ul.tasks li.task header a.gray { margin: 0 5px 0 0; }
+section.container div.submission-activity ul.tasks li.task header h4 { float: left; margin: 5px 0 0 0; font-size: 1.3em; }
+section.container div.submission-activity ul.tasks li.task header a { float: right; }
+section.container div.submission-activity { padding: 10px; }
+section.container div.submission-activity div.label { float: left; font-weight: bold; width: 150px; color: black; text-align: justify; }
+section.container div.submission-activity div.value { margin-left: 150px; }
+section.container div.submission-activity ul.tasks li.task:first-child { margin-top: 0; }
+section.container div.submission-activity ul.tasks li.task {
+    border-style: solid;
+    border-width: 1px;
+    margin-top: 5px;
+    padding: 5px;
+}
+
+/* Worklogs */
+section.container div.submission-activity ul.tasks li.task ul.worklogs header { padding: 0 5px 5px 10px; margin: 10px 0 0 0; }
+section.container div.submission-activity ul.tasks li.task ul.worklogs p { padding: 0 0 5px 20px; margin: 0; font-style: italic; }
+section.container div.submission-activity ul.tasks li.task ul.worklogs li.worklog {
+    padding: 5px 10px 5px 10px;
+    border-style: solid;
+    border-width: 1px;
+    margin: 0 5px 5px 5px;
+    border-color: #C8C8C8;
+}
+section.container div.submission-activity ul.tasks li.task ul.worklogs li.even { background-color: rgb(238, 238, 238); }
+section.container div.submission-activity ul.tasks li.task ul.worklogs li.odd { background-color: rgb(216, 216, 216); }
+
+/* Responsive */
+@media (max-width: 992px) {
+    header.container div.request-information div.middle { width: auto; }
+    header.container div.request-information div.left div.content-wrap div.originating-name { margin: 15px 0 0 0; }
+    section.container div.submission-activity div.label { float: none; }
+    section.container div.submission-activity div.value { margin-left: 10px; }
+}

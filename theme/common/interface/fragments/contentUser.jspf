@@ -1,0 +1,187 @@
+<%
+String gravatarEmail = null;
+if(context != null) {
+    // Retrieve email for the current user
+    KSSamplePeople samplePerson = KSSamplePeople.findByUsername(context, context.getUserName());
+    if(samplePerson != null) {
+        gravatarEmail = samplePerson.getEmail();
+    }
+%>
+<div class="profile" data-target="div.user-card">
+    <i class="gravatar-icon"></i>
+</div>
+<div class="user-card" aria-hidden="true">
+    <div class="wrap">
+        <a class="user" href="<%= bundle.getProperty("profileUrl")%>">
+        </a>
+        <div class="information">
+            <div class="name">
+                <%= samplePerson.getFullName()%>
+            </div>
+            <div class="email">
+                <%= samplePerson.getEmail()%>
+            </div>
+            <div class="profile">
+                <a class="btn btn-primary" href="<%= bundle.getProperty("profileUrl")%>">
+                    View Profile
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="sign-out">
+             <% if (logoutEnabled) {%>
+                <a href="<%= bundle.getProperty("logoutUrl")%>">   
+                    Sign Out
+                </a>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+    gravatar($.trim('<%= gravatarEmail %>'), 'i.gravatar-icon');
+    gravatar($.trim('<%= gravatarEmail %>'), 'div.user-card a.user');
+    $('div.profile').on('click', function(event) {
+        event.stopImmediatePropagation();
+        // Turn off any previous one events to prevent stacking
+        $(window).off('resize');
+        var target = $(this).data('target');
+        var objContext = this;
+        if($(target).attr('aria-hidden') === 'true') {
+            $(target).attr('aria-hidden', false);
+            $(target).show();
+            $(objContext).append($('<div>').addClass('carrot'));
+
+            // Create one reset display event for resize
+            $(window).one('resize', function() {
+                $(target).attr('aria-hidden', true);
+                $(target).hide();
+                $(objContext).find('div.carrot').remove();
+            });
+            one.call(objContext, target)
+        } else {
+            $(target).attr('aria-hidden', true);
+            $(target).hide();
+            $(objContext).find('div.carrot').remove();
+        }
+    });
+    function one(target) {
+        // Turn off any previous one events to prevent stacking
+        $(document).off('click');
+        // Create one reset display event on content slide
+        $(document).one('click', function(event) {
+            event.stopImmediatePropagation();
+            if($(event.target).parents('div.user-card').first().get(0) != $(target).get(0)
+                && $(event.target).first().get(0) != $(target).get(0)) {
+                $(target).attr('aria-hidden', true);
+                $(target).hide();
+                $(this).find('div.carrot').remove();
+            } else {
+                // Recursion
+                one(target);
+            }
+        });
+    }
+});
+</script>
+<style type="text/css">
+    header.main div.container div.collapse > div > i.gravatar-icon img {
+        display: inline-block;
+        outline: none;
+        vertical-align: middle;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        height: 48px;
+        width: 48px;
+        float: right;
+        margin: -32px 0 0 0;
+    }
+    div.user-card {
+        display: none;
+        position: absolute;
+        z-index: 2040;
+        background-color: white;
+        top: 28px;
+        right: 0;
+        border-color: rgba(0,0,0,.2);
+        box-shadow: 0 2px 10px rgba(0,0,0,.2);
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        -webkit-user-select: text;
+    }
+    div.user-card div.wrap {
+        margin: 20px;
+    }
+    div.user-card div.wrap a.user {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 20px;
+    }   
+    div.user-card div.wrap a.user img {
+        display: inline-block;
+        outline: none;
+        vertical-align: middle;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        height: 96px;
+        width: 96px;
+    }
+    div.user-card div.wrap div.information {
+        display: inline-block;
+        vertical-align: top;
+    }
+    div.user-card div.wrap div.information div.name {
+        font-weight: bold;
+    }
+    div.user-card div.wrap div.information div.email {
+        color: #666;
+    }
+    div.user-card div.wrap div.information div.profile {
+        margin: 28px 0 0 0;
+    }
+    div.user-card div.actions {
+        background: #f5f5f5;
+        border-top: 1px solid #ccc;
+        border-color: rgba(0,0,0,.2);
+        padding: 10px 0;
+        width: 100%;
+        display: table;
+    }
+    div.user-card div.actions div.sign-out {
+        display: table-cell;
+        text-align: right;
+    }
+    div.user-card div.actions div.sign-out a {
+        margin: 0 20px;
+        background: #f8f8f8;
+        border: 1px solid #c6c6c6;
+        display: inline-block;
+        line-height: 28px;
+        padding: 0 12px;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        color: #666;
+    }
+    div.user-card div.actions div.sign-out a:hover {
+        text-decoration: none;
+    }
+    div.carrot {
+        border-color: transparent;
+        border-bottom-color: #fff;
+        border-style: dashed dashed solid;
+        border-width: 0 8px 8px;
+        position: absolute;
+        right: 0;
+        top: 20px;
+        z-index: 1;
+        height: 0;
+        width: 0;
+    }
+</style>
+<%}%>

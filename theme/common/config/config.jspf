@@ -1,0 +1,32 @@
+<%--
+    NOTE: This file is required.
+--%>
+<%
+    bundle.setProperty("companyName", "ACME");
+    bundle.setProperty("catalogName", "Tabs");
+    // Slug used for urls
+    bundle.setProperty("slug", "Tabs");
+    // Urls
+    bundle.setProperty("catalogUrl", bundle.applicationPath() + "DisplayPage?name=" + bundle.getProperty("slug") + "-Catalog");
+    bundle.setProperty("searchUrl", bundle.applicationPath() + "DisplayPage?name=" + bundle.getProperty("slug") + "-Search");
+    bundle.setProperty("submissionsUrl", bundle.applicationPath() + "DisplayPage?name=" + bundle.getProperty("slug") + "-Submissions");
+    bundle.setProperty("aboutUrl", bundle.applicationPath() + "DisplayPage?name=" + bundle.getProperty("slug") + "-About");
+    bundle.setProperty("profileUrl", bundle.applicationPath() + "DisplayPage?name=" + bundle.getProperty("slug") + "-UserProfile");
+    bundle.setProperty("feedbackUrl", bundle.applicationPath() + "DisplayPage?name=" + bundle.getProperty("slug") + "-Feedback");
+    bundle.setProperty("searchNameParam", bundle.getProperty("slug") + "-Search");
+    bundle.setProperty("logoutUrl", "KSAuthenticationServlet?Logout=true");
+
+    // This is a path to the review jsp to be used by review request.
+    bundle.setProperty("reviewJsp", bundle.relativeBundlePath() + "packages/base/review.jsp");
+
+    // Service Item Image Library Path
+    bundle.setProperty("serviceItemImagePath", bundle.bundlePath() + "../../surveys/kineticImageLibrary/");
+
+    // Boolean for displaying the logout link
+    Boolean logoutEnabled = true;
+
+    // Category filter for not displaying categories in the flyout navigation that are portal page specific like self help
+    ArrayList<String> categoryFilter = new ArrayList<String>();
+    //categoryFilter.add("Self Help");
+    HashSet<String> categoryFilterHashSet = new HashSet<String>(categoryFilter);
+%>

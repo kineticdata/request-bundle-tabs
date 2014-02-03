@@ -1,0 +1,25 @@
+@charset "utf-8";
+
+header.container { margin: 0 auto; }
+header div.wrap-float { float: left; width: 880px; }
+header div.wrap h2,
+header div.wrap-float h2 { margin: 10px 0; }
+header div.description { font-size: 14px; }
+header div.category-image { margin: 10px 0; width: 80px; float: left; }
+header div.category-image img { height: 60px; width: 60px; }
+
+/* Subcategories */
+section.container div.subcategories { float: left; background-color: #a0b13a; color: white; }
+section.container div.subcategories h5 { padding: 0 5px; }
+section.container div.subcategories ul li { background-color: #808e2e; border-top: 1px solid #a0b13a; }
+section.container div.subcategories a { color: white; display: block; padding: 5px; }
+section.container div.subcategories ul a:hover { background-color: #607200; text-decoration: none; }
+
+/* Responsive */
+@media (min-width: 767px) {
+    div.fixed-header-spacer { height: 140px; }
+}
+@media (max-width: 767px) {
+    div.fixed-header-spacer { height: 50px; }
+    div.breadcrumbs ul li a{ font-size: 18px; }
+}

@@ -1,0 +1,101 @@
+<%@page import="java.text.*,java.util.*"%>
+<%!
+    /**
+     * Helpers are essentially Java classes that can be used in JSP pages.  The 
+     * DateHelper is a core helper (meaning that it rarely, if ever be 
+     * modified).  It includes helper methods for working with Dates.
+     */
+    public static class DateHelper {
+    
+        // popular US date format
+        public static final String DATE_FORMAT_SIMPLE = "MM/dd/yyyy HH:mm:ss";
+
+        // English month abbreviations
+        public static final String[] MONTH_ABBREVIATIONS = new String[] {
+            "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
+        };
+
+        /**
+         * Returns a date string formatted for the specified locale.  The format
+         * of the input dateString is expected to be "MM/dd/yyyy HH:mm:ss".
+         * 
+         * @param String
+         * @param java.net.Locale
+         * @returns String
+         *
+         * Example - format a US date for an Australia user
+         *     String usDate = "02/22/1971 14:04:00";
+         *     java.util.Locale australia = new java.util.Locale("en", "AU");
+         *     String auDate = DateHelper.formatDate(usDate, australia);
+         *     // auDate => 22/02/1971 2:04:00 PM
+         */
+        public static String formatDate(String dateString, Locale locale) {
+            String result = "";
+            if (!result.equals(dateString)) { 
+                try {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_SIMPLE);
+                    Date date = simpleDateFormat.parse(dateString);
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
+                    result = dateFormat.format(date);
+                } catch (Exception e) {
+                    throw new RuntimeException("Unable to format date: "+dateString, e);
+                }
+            }
+            return result;
+        }
+
+        /**
+         * Given a user-defined pattern, returns a date/time string formatted 
+         * for the specified locale.  
+         * 
+         * @param String dateString
+         * @param java.net.Locale
+         * @param String datePattern
+         * @returns String
+         *
+         * Note: A date/time string from an AR System Bridge will look like this:
+         *      2013-01-22T21:18:13+0000
+         * So the pattern will be:
+         *      yyyy-MM-dd'T'HH:mm:ssZ
+         *
+         */
+        public static String formatDate(String dateString, Locale locale, String datePattern) {
+            String result = "";
+            if (!result.equals(dateString)) { 
+                try {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(datePattern);
+                    Date date = simpleDateFormat.parse(dateString);
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
+                    result = dateFormat.format(date);
+                } catch (Exception e) {
+                    throw new RuntimeException("Unable to format date: "+dateString, e);
+                }
+            }
+            return result;
+        }
+
+        /**
+         * Returns the current four digit year value as a string.
+         * @returns String
+         */
+        public static String getCurrentYear() {
+            java.util.Calendar calendar = java.util.Calendar.getInstance();
+            int year = calendar.get(java.util.Calendar.YEAR);
+            return String.valueOf(year);
+        }
+
+        /**
+         * Returns the current date and time.
+         * @param java.net.Locale
+         * @returns String
+         */
+        public static String getCurrentDateTime(Locale locale) {
+            String result = null;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_SIMPLE);
+            Date date = new Date();
+            DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, locale);
+            result = dateFormat.format(date);
+            return result;
+        }
+    }
+%>

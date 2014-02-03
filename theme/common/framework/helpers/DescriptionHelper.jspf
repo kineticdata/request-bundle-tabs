@@ -1,0 +1,48 @@
+<%!
+    /**
+     * Description Helper
+     */
+    public static class DescriptionHelper {
+
+        public static Map<String, String> getTemplateDescriptionMap(HelperContext context, Catalog catalog) {
+
+            // Build a Map that maps template names to template ids.  This is used when
+            // building links to description templates which are stored as attributes
+            // where the value is the template name of the description template.
+            Map<String, String> templateIds = new java.util.HashMap<String, String>();
+            for (Template template : catalog.getTemplates(context)) {
+                templateIds.put(template.getName(), template.getId());
+            }
+            
+            // Build a Map that maps a template to its template description.  Both
+            // values are the ids of the respective templates.
+            Map<String, String> templateDescriptions = new java.util.HashMap<String, String>();
+            for (Template template : catalog.getTemplates(context)) {
+                String[] values = template.getTemplateAttributeValues("HasDescription");
+                if (values.length == 1) {
+                    templateDescriptions.put(template.getId(),templateIds.get(values[0]));
+                } else if (values.length > 1) {
+                    throw new RuntimeException("HasDescription attribute should not have multiple values.");
+                }
+            }
+
+            return templateDescriptions;
+        }
+
+        public static Map<String, String> getCategoryDescriptionMap(HelperContext context, Catalog catalog) {
+            // Build a Map that maps the category id to the template id of its
+            // description template.
+            Map<String, String> categoryDescriptions = new java.util.HashMap<String, String>();
+            for (Template template : catalog.getTemplates(context)) {
+                if (template.getTemplateAttributeValues("IsCategoryDescription").length > 0) {
+                    Category category = catalog.getCategoryByName(template.getTemplateAttributeValues("IsCategoryDescription")[0]);
+                    if(category != null) {
+                        categoryDescriptions.put(category.getId(), template.getId());
+                    }
+                }
+            }
+
+            return categoryDescriptions;
+        }
+    }
+%>

@@ -1,0 +1,16 @@
+<%!
+    /**
+     * Service Item Image Path Helper
+     */
+    public static class ServiceItemImageHelper {
+        public static String buildImageSource(String serviceItemImage, String serviceItemImagePath) {
+            String result = null;
+            if(serviceItemImage.startsWith("http://")) {
+                result = serviceItemImage;
+            } else {
+                result = serviceItemImagePath + serviceItemImage;
+            }
+            return result;
+        }
+    }
+%>

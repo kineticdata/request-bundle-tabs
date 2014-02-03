@@ -1,0 +1,11 @@
+
+div.fixed-header-spacer {
+    height: 120px;
+}
+ header.sub { top: 60px; }
+@media (min-width: 992px) {
+    div.fixed-header-spacer {
+        height: 150px;
+    }
+    header.sub { top: 96px; }
+}

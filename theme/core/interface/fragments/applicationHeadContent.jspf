@@ -1,0 +1,112 @@
+<%--
+    This file should be included in any bundle or package pages that render a
+    Kinetic SR form (either in display or review mode).  The file loads the HTML
+    head content that is required for Kinetic SR to function normally.
+
+    This includes dependencies such as the YUI css and javascript files that the
+    core application behavior depends upon, core Kinetic javascript files, and 
+    the javascript code used to initialize the clientManager context.
+
+    By default, this file includes the minified versions of javascript files.
+    To include the expanded versions of these files, pass a debugjs=true
+    parameter with the page request.
+
+    In general, this file should not be modified.
+--%>
+
+<%--
+  CSS
+    Require the YUI css files that are required to properly style Kinetic SR
+    form widgets (such as the date question calendar picker).
+--%>
+<!-- Application CSS Dependencies -->
+<link rel="stylesheet" type="text/css" href="<%=bundle.applicationPath() + "resources/js/yui/build/calendar/assets/calendar.css"%>"/>
+<link rel="stylesheet" type="text/css" href="<%=bundle.applicationPath() + "resources/js/yui/build/container/assets/container.css"%>"/>
+
+<%--
+  Javascript
+    Require the YUI javascript files that are required to properly process a
+    Kinetic SR form.
+
+    If there is a debugjs=true HTTP request parameter, expand out all of the YUI
+    javascript files.  If there is not a debugjs parameter (indicating a typical
+    request), include the minified version of the files.
+--%>
+<!-- Application Javascript Dependencies -->
+<% if (BundleHelper.debugJs(request)) { %>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/yahoo/yahoo.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/dom/dom.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/event/event.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/connection/connection.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/animation/animation.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/dragdrop/dragdrop.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/element/element.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/get/get.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/yuiloader/yuiloader.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/container/container.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/button/button.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/calendar/calendar.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/json/json.js"%>"></script>
+<% } else { %>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/utilities/utilities.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/container/container-min.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/button/button-min.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/calendar/calendar-min.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/yui/build/json/json-min.js"%>"></script>
+<% } %>
+
+<%--
+  Javascript
+    Include the core Kinetic SR javascript files.  These are responsible for the
+    basic client-side application logic (such as client side validations,
+    events, etc).
+
+    If there is a debugjs=true HTTP request parameter, expand out all of the YUI
+    javascript files.  If there is not a debugjs parameter (indicating a typical
+    request), include the minified version of the files.
+--%>
+<!-- Application Javascript -->
+<% if (BundleHelper.debugJs(request)) { %>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/kd_actions.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/kd_utils.js"%>"></script>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/kd_client.js"%>"></script>
+<% } else {%>
+<script type="text/javascript" src="<%=bundle.applicationPath() + "resources/js/kd_core.js"%>"></script>
+<% }%>
+
+<%--
+  Javascript
+    Prepare the clientManager javascript object.  This object is used to store
+    state information about the page request.  This information is used by
+    functions within the core Kinetic javascript libraries.
+
+    The ks_initSessionVars() method is automatically called at the appropriate
+    time by the core kinetic libraries (via the KD.utils.ClientManager.init or
+    KD.utils.Review.init initialization function).
+--%>
+<!-- Specify the KD.utils.ClientManager values.-->
+<script type="text/javascript">
+    // Initialize a convenience reference to the client manager object
+    var clientManager = KD.utils.ClientManager;
+    
+    // Define the ks_initSessionVars function, which is automatically called at
+    // the appropriate time by the core kinetic libraries.
+    function ks_initSessionVars(){
+        clientManager.authenticated = <%=UserContext.isAuthenticated()%>;
+        clientManager.authenticationType = '<%=UserContext.getAuthenticationType()%>';
+        clientManager.catalogName = '<%=String.valueOf(customerSurvey.getCategory()).replaceAll("'", "\\\\'")%>';
+        clientManager.categoryId = '<%=customerSurvey.getCategoryId()%>';
+        clientManager.customerSurveyId = '<%=customerSurvey.getCustomerSurveyInstanceID()%>';
+        clientManager.errorMessage = '<%=String.valueOf(customerSurvey.getErrorMessage()).replaceAll("'", "\\\\'")%><%=String.valueOf(UserContext.getErrorMessage()).replaceAll("'", "\\\\'")%>';
+        clientManager.isAuthenticationRequired = '<%= customerSurvey.isAuthenticationRequired()%>';
+        clientManager.isNewPage = <%=customerSurvey.getIsNewPage()%>;
+        clientManager.maxCharsOnSubmit = <%=customerSurvey.getMaxCharsOnSubmit()%>;
+        clientManager.originatingPage = '<%=org.apache.commons.lang3.StringEscapeUtils.escapeXml(UserContext.getOriginatingPage())%>';
+        clientManager.sessionId = '<%=customerSurvey.getCustomerSessionInstanceID()%>';
+        clientManager.submitType = '<%=customerSurvey.getSubmitType()%>'
+        clientManager.successMessage = '<%=String.valueOf(customerSurvey.getSuccessMessage()).replaceAll("'", "\\\\'")%><%=String.valueOf(UserContext.getSuccessMessage()).replaceAll("'", "\\\\'")%>';
+        clientManager.templateId = '<%=customerSurvey.getSurveyTemplateInstanceID()%>';
+        clientManager.userName = '<%=String.valueOf(UserContext.getUserName()).replaceAll("'", "\\\\'")%>';
+        clientManager.webAppContextPath = '<%=bundle.applicationPath()%>';
+    }
+</script>

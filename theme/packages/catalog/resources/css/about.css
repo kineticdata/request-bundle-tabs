@@ -1,0 +1,71 @@
+@charset "utf-8";
+
+div.templateButtonLayer {
+    display: none !important;
+}
+
+div[label="Left Section"] {
+    float: left;
+    width: 480px;
+}
+
+div[label="Right Section"] {
+    float: left;
+    width: 480px;
+}
+
+table.prioritization {
+	margin: 0 10px 0 0;
+}
+
+table.prioritization thead {
+	background-color: #6296c7;
+	color: white;
+	font-weight: 300;
+}
+
+table.prioritization tbody {
+	background-color: #e3ebf4;
+}
+
+table.prioritization tbody tr td:first-child {
+	background-color: #a4d6e3;
+	font-weight: bold;
+	width: 75px;
+}
+
+table.prioritization thead tr th, table.prioritization tbody tr td {
+	vertical-align: top;
+	text-align: justify;
+	padding: 10px;
+}
+
+table.prioritization thead tr th {
+	border: 1px solid white;
+	border-bottom: 4px solid white;
+	height: 40px;
+}
+
+table.prioritization tbody tr td {
+	border: 1px solid white;
+}
+
+table.prioritization tbody tr {
+	height: 150px;
+}
+
+table.prioritization tbody tr td ul {
+	padding: 0;
+	margin: 0 0 0 16px;
+	list-style-type: square;
+}
+
+table.prioritization tbody tr.medium {
+	height: 100px;
+}
+table.prioritization tbody tr.large {
+	height: 165px;
+}
+img[alt="Prioritization Impact"] {
+	width: 800px;
+}

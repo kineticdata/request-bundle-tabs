@@ -1,0 +1,18 @@
+@charset "utf-8";
+.alphabetical-navigation { margin: 10px 0 10px 0; }
+.ln-letters { overflow: hidden; }
+.ln-letters a {
+    font-size: 11px; 
+    display: block; 
+    float: left; 
+    padding: 2px 4px; 
+    border-right: 1px solid; 
+    text-decoration: none;
+}
+.ln-letters .ln-last { border-right: none; }
+
+@media (max-width: 767px) {
+    section.container {
+        display: block;
+    }
+}

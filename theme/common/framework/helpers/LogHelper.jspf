@@ -1,0 +1,25 @@
+<%@page import="org.apache.log4j.Logger"%>
+<%@page import="com.kd.kineticSurvey.impl.SurveyLogger"%>
+
+<%!
+/**
+ * A helper class that returns a logger object that sends messages 
+ * to kslog.log. Update this class if and when the underlying 
+ * impl class changes.
+ *
+ * Example Use:
+ * Logger logger = LogHelper.getLogger();
+ * try { logger.debug("I got this far."); } catch (Exception e) { logger.error("KAAAAAAAAHN! -- It failed: " + e); }
+ */
+public static class LogHelper {
+    /**
+     * Returns the static Logger object from SurveyLogger.
+     *
+     * @returns Logger
+     */
+    public static Logger getLogger() {
+        // Fetch and return the logger object
+        return SurveyLogger.getLogger();
+    }
+}
+%>
