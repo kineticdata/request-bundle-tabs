@@ -535,6 +535,7 @@ form.user-search input[type="search"] {
     border-bottom-right-radius: 0; 
     height: 28px;
     margin: 0;
+    -webkit-appearance: none;
 }
 form.user-search button[type="submit"].fa-search {
     width: 45px;
@@ -664,6 +665,7 @@ div.navigation-slide form.user-search {
     z-index: 1030;
     background-color: #0C2231;
     border-color: #252525;
+    -webkit-appearance: none;
 }
 div.navigation-slide form.user-search input[type="search"] {
     width: 180px;
