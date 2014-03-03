@@ -217,7 +217,12 @@ function defaultFieldCallback(li, value, fieldname, label) {}
 /**
  * Complete callback
  */
-function defaultCompleteCallback() {}
+function defaultCompleteCallback() {
+    // If window height larger than content slide, get more results
+    if($(window).height() > $('div.content-slide').height()) {
+        $('nav.pagination ul.links li.active').next().find('a').trigger('click')
+    }
+}
 
 function initialize(table, status, entryOptionSelected) {
     var loader = $('div#loader');
@@ -270,11 +275,6 @@ function initialize(table, status, entryOptionSelected) {
         fieldCallback: function(li, value, fieldname, label) { table.fieldCallback.call(this, li, value, fieldname, label); },
         completeCallback: function() { table.completeCallback.call(this); }
     });
-
-    // If window height larger than content slide, get more results
-    if($(window).height() > $('div.content-slide').height()) {
-        $('nav.pagination ul.links li.active').next().find('a').trigger('click')
-    }
     // Keeps the scroll from firing until ajax completed
     var killScroll = false;
     // Paginate more results when user is close to bottom of page on scroll
