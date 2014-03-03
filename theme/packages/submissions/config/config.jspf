@@ -3,7 +3,7 @@
     NOTE: This file is required.
 --%>
 <%
-    bundle.setProperty("submissionActivityUrl", bundle.applicationPath() + "DisplayPage?name=" + bundle.getProperty("slug") + "_SubmissionDetails");
+    bundle.setProperty("submissionActivityUrl", bundle.applicationPath() + "DisplayPage?name=" + bundle.getProperty("slug") + "-SubmissionActivity");
 
     // Auto created requests type
     bundle.setProperty("autoCreatedRequestType", "Auto Created Requests");
