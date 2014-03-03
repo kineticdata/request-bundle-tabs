@@ -11,7 +11,7 @@
             Map<String, String> parameters = new java.util.HashMap<String, String>();
             parameters.put("Id", id);
             // Make the bridge call.
-            return BridgeBase.retrieve(context, templateId, MODEL_NAME, qualification, parameters, CLASS);
+            return (Incident) BridgeBase.retrieve(context, templateId, MODEL_NAME, qualification, parameters, CLASS);
         }
         
         /**
