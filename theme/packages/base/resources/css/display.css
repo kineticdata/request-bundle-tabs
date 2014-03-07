@@ -80,3 +80,7 @@ div.user-information { padding: 10px 0px 10px 10px; }
 div.user-information div[data-id="Login ID"] { display: none; }
 div.user-information div[data-id="First Name"] { float: left; margin-right: 5px; }
 div.user-information div[data-id="Middle Name"] { display: none; }
+
+/* YUI Calendar */
+div.yui-calcontainer table { margin-top: 10px; }
+div.yui-calcontainer tr.cal_time input { padding: 4px 3px; }
