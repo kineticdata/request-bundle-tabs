@@ -5,6 +5,7 @@
     $.widget('custom.consoleTable', {
         // Default opitons
         options: {
+            escapeHtml: true,
             entryOptionSelected: 5,
             entryOptions: [5, 10, 50, 100],
             page: 1,
@@ -19,6 +20,8 @@
             var widget = this;
             // This is the first request, make a server call
             widget.firstRequest = true;
+            // For client side pagination value manipulation
+            widget.checkOnce = true;
             // Hide
             widget.element.hide();
             // Build HTML
@@ -146,6 +149,8 @@
             // Build theader
             var thead = $('<thead>');
             var tr = $('<tr>');
+            // Build tbody
+            var tbody = $('<tbody>');
             $.each(widget.options.displayFields, function(fieldname, label) {
                 var th = $('<th>');
                 th.append(label)
@@ -165,52 +170,47 @@
                 tr.append(th);
             });
             thead.append(tr);
-            // Build tbody
-            var tbody = $('<tbody>');
+            // List that gets built
+            function buildTableBody(index, record) {
+                // Create row
+                var tr = $('<tr>');
+                $.each(widget.options.displayFields, function(fieldname, label) {
+                    // Create Column
+                    var td = $('<td>');
+                    // Append record
+                    td.append(((record[fieldname] !== null) ? record[fieldname] : ""));
+                    // Column callback
+                    if (widget.options.columnCallback != undefined) { widget.options.columnCallback.call(widget, td, record[fieldname], fieldname, label); }
+                    tr.append(td);
+                });
+                // Striping
+                ((index % 2 == 0) ? tr.addClass('kd-odd') : tr.addClass('kd-even'));
+                // Row callback
+                if (widget.options.rowCallback != undefined) { widget.options.rowCallback.call(widget, tr, record, index); }
+                // Append to tbody
+                tbody.append(tr);
+            }
             // Build client or server side pagination
             if(widget.options.serverSidePagination) {
-                $.each(widget.records, function(index, value) {
-                    // Create row
-                    var tr = $('<tr>');
-                    $.each(widget.options.displayFields, function(fieldname, label) {
-                        // Create Column
-                        var td = $('<td>');
-                        // Append value
-                        td.append(((value[fieldname] !== null) ? value[fieldname] : ""));
-                        // Column callback
-                        if (widget.options.columnCallback != undefined) { widget.options.columnCallback.call(widget, td, value[fieldname], fieldname, label); }
-                        tr.append(td);
-                    });
-                    // Striping
-                    ((index % 2 == 0) ? tr.addClass('kd-odd') : tr.addClass('kd-even'));
-                    // Row callback
-                    if (widget.options.rowCallback != undefined) { widget.options.rowCallback.call(widget, tr, value, index); }
-                    // Append to tbody
-                    tbody.append(tr);
+                $.each(widget.records, function(index, record) {
+                    // Check escape html option for values
+                    record = widget._htmlEscape(record);
+                    buildTableBody(index, record);
                 });
             } else {
-                $.each(widget.records, function(index, value) {
+                $.each(widget.records, function(index, record) {
+                    // Only run this escape once for client side
+                    if(widget.checkOnce) {
+                        // Check escape html option for values
+                        record = widget._htmlEscape(record);
+                        // disable this 
+                        widget.checkOnce = false;
+                    }
                     if(index >= widget._getIndex() && index <= (widget._getIndex() + (widget.options.resultsPerPage  - 1))) {
-                        // Create row
-                        var tr = $('<tr>');
-                        $.each(widget.options.displayFields, function(fieldname, label) {
-                            // Create Column
-                            var td = $('<td>');
-                            // Append value
-                            td.append(((value[fieldname] !== null) ? value[fieldname] : ""));
-                            // Column callback
-                            if (widget.options.columnCallback != undefined) { widget.options.columnCallback.call(widget, td, value[fieldname], fieldname, label); }
-                            tr.append(td);
-                        });
-                        // Striping
-                        ((index % 2 == 0) ? tr.addClass('kd-odd') : tr.addClass('kd-even'));
-                        // Row callback
-                        if (widget.options.rowCallback != undefined) { widget.options.rowCallback.call(widget, tr, value, index); }
-                        // Append to tbody
-                        tbody.append(tr);
+                        buildTableBody(index, record);
                     }
                 });
-            } 
+            }
             // Build pagination links
             widget.options.total = widget.recordCount;
             if(widget.options.pagination) {
@@ -233,6 +233,17 @@
             this.element.show();
             // Run complete callback
             widget._complete();
+        },
+        _htmlEscape: function(record) {
+            // Check escape html option for values
+            if(this.options.escapeHtml) {
+                $.each(record, function(key, value) {
+                    if(value !== null && value !== '') {
+                        record[key] = $('<span>').text(value).html();
+                    }
+                });
+            }
+            return record;
         },
         _complete: function() {
             if (this.options.completeCallback != undefined) { this.options.completeCallback.call(this); }

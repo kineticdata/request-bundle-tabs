@@ -5,6 +5,7 @@
     $.widget('custom.consoleList', {
         // Default opitons
         options: {
+            escapeHtml: true,
             entryOptionSelected: 5,
             entryOptions: [5, 10, 50, 100],
             page: 1,
@@ -20,6 +21,8 @@
             var widget = this;
             // This is the first request, make a server call
             widget.firstRequest = true;
+            // For client side pagination value manipulation
+            widget.checkOnce = true;
             // Hide
             widget.element.hide();
             // Build HTML
@@ -151,10 +154,19 @@
             // Build client or server side pagination
             if(widget.options.serverSidePagination) {
                 $.each(widget.records, function(index, record) {
+                    // Check escape html option for values
+                    record = widget._htmlEscape(record);
                     buildList(index, record);
                 });
             } else {
                 $.each(widget.records, function(index, record) {
+                    // Only run this escape once for client side
+                    if(widget.checkOnce) {
+                        // Check escape html option for values
+                        record = widget._htmlEscape(record);
+                        // disable this 
+                        widget.checkOnce = false;
+                    }
                     if(index >= widget._getIndex() && index <= (widget._getIndex() + (widget.options.resultsPerPage  - 1))) {
                         buildList(index, record);
                     }
@@ -179,6 +191,17 @@
             this.element.show();
             // Run complete callback
             widget._complete();
+        },
+        _htmlEscape: function(record) {
+            // Check escape html option for values
+            if(this.options.escapeHtml) {
+                $.each(record, function(key, value) {
+                    if(value !== null && value !== '') {
+                        record[key] = $('<span>').text(value).html();
+                    }
+                });
+            }
+            return record;
         },
         _complete: function() {
             if (this.options.completeCallback != undefined) { this.options.completeCallback.call(this); }
