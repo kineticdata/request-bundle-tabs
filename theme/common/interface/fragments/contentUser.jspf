@@ -1,10 +1,12 @@
 <%
 String gravatarEmail = null;
+String fullName = null;
 if(context != null) {
     // Retrieve email for the current user
     KSSamplePeople samplePerson = KSSamplePeople.findByUsername(context, context.getUserName());
     if(samplePerson != null) {
         gravatarEmail = samplePerson.getEmail();
+        fullName = samplePerson.getFullName();
     }
 %>
 <div class="profile" data-target="div.user-card">
@@ -16,10 +18,10 @@ if(context != null) {
         </a>
         <div class="information">
             <div class="name">
-                <%= samplePerson.getFullName()%>
+                <%= fullName%>
             </div>
             <div class="email">
-                <%= samplePerson.getEmail()%>
+                <%= gravatarEmail%>
             </div>
             <div class="profile">
                 <a class="btn btn-primary" href="<%= bundle.getProperty("profileUrl")%>">
